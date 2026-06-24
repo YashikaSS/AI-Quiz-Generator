@@ -1,0 +1,39 @@
+# =========================================================
+# AI Quiz Generator — Shared requirements.txt
+# Run: pip install -r requirements.txt
+# Every team member installs this ONE file. No need to figure
+# out who needs what — just run it and you're set.
+# =========================================================
+
+# ---------- Member 1: Frontend ----------
+# (No Python deps — pure HTML/CSS/JS, runs in the browser)
+
+# ---------- Member 2: YouTube & PDF processing ----------
+yt-dlp>=2026.6.1
+PyMuPDF>=1.24.0
+
+# ---------- Member 3: Speech-to-Text ----------
+faster-whisper>=1.0.3
+# Note: faster-whisper bundles its own audio decoding (via PyAV),
+# so ffmpeg is NOT required for this module specifically.
+# However Member 2 still needs system ffmpeg installed for yt-dlp's
+# audio conversion step, so keep it installed project-wide anyway.
+
+# ---------- Members 4 & 5: Summary, Notes, Quiz Generation (LLM) ----------
+transformers>=4.45.0
+torch>=2.3.0
+accelerate>=0.33.0
+sentencepiece>=0.2.0   # required for some Qwen/Llama tokenizers
+
+# ---------- Member 6: Backend & Database ----------
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9   # required for FastAPI file uploads
+mysql-connector-python>=9.0.0
+sqlalchemy>=2.0.0
+pydantic>=2.8.0
+python-dotenv>=1.0.1
+
+# ---------- Shared / Testing ----------
+pytest>=8.3.0
+requests>=2.32.0

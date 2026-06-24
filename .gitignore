@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Generated/runtime content — don't commit these
+storage/uploads/*
+storage/transcripts/*
+storage/summaries/*
+storage/notes/*
+storage/quizzes/*
+!storage/uploads/.gitkeep
+!storage/transcripts/.gitkeep
+!storage/summaries/.gitkeep
+!storage/notes/.gitkeep
+!storage/quizzes/.gitkeep
+
+# Model weights (large, shouldn't be in git)
+models_cache/
+
+# Environment secrets
+.env
+
+# Editor/OS junk
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
