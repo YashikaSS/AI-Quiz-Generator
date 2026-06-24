@@ -24,6 +24,9 @@ transformers>=4.45.0
 torch>=2.3.0
 accelerate>=0.33.0
 sentencepiece>=0.2.0   # required for some Qwen/Llama tokenizers
+sumy==0.12.0            # extractive summarization (LexRank) - Member 4 fallback
+nltk==3.9.4             # sentence tokenizer used by sumy - Member 4
+numpy>=1.26.0           # required by sumy's LexRank summarizer - Member 4
 
 # ---------- Member 6: Backend & Database ----------
 fastapi>=0.115.0
