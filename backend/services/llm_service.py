@@ -77,49 +77,36 @@ def is_model_available() -> bool:
 
 
 def generate_text(prompt: str, max_new_tokens: int = 512) -> str:
-    """
-    The ONE function other files should call.
-
-    Args:
-        prompt: The full text prompt/instruction to send to the LLM.
-        max_new_tokens: Roughly how long the answer is allowed to be.
-
-    Returns:
-        The model's text response as a plain string.
-
-    Raises:
-        RuntimeError: if no real model is configured (USE_REAL_LLM is not
-            "true"). Callers (like summary_service.py) are expected to
-            catch this and fall back to a non-LLM method instead.
-    """
+    """The ONE function other files should call."""
     if not USE_REAL_MODEL:
-        # No real model is wired up yet. We raise instead of silently
-        # returning placeholder text, so callers can reliably detect
-        # this case with a try/except and fall back appropriately.
         raise RuntimeError(
             "No real LLM is configured. Set environment variable "
-            "USE_REAL_LLM=true and ensure a model is downloaded to "
-            "enable real LLM generation."
+            "USE_REAL_LLM=true and ensure a model is downloaded."
         )
 
     _load_model()
 
     messages = [{"role": "user", "content": prompt}]
-    inputs = _tokenizer.apply_chat_template(
-        messages, add_generation_prompt=True, return_tensors="pt"
+    
+    # 1. Format the chat prompt into a raw string first
+    text_prompt = _tokenizer.apply_chat_template(
+        messages, tokenize=False, add_generation_prompt=True
     )
 
+    # 2. Tokenize the string properly and send to the model's device
+    model_inputs = _tokenizer([text_prompt], return_tensors="pt").to(_model.device)
+
+    # 3. Generate the answer (The ** unpacks the dictionary for the model)
     outputs = _model.generate(
-        inputs,
+        **model_inputs,
         max_new_tokens=max_new_tokens,
         do_sample=True,
         temperature=0.7,
     )
 
-    # Only decode the NEW tokens (the model's answer), not the input prompt.
-    new_tokens = outputs[0][inputs.shape[-1]:]
+    # 4. Only decode the NEW tokens (the model's answer), not the prompt
+    input_length = model_inputs.input_ids.shape[1]
+    new_tokens = outputs[0][input_length:]
     response = _tokenizer.decode(new_tokens, skip_special_tokens=True)
+    
     return response.strip()
-
-
-
