@@ -25,6 +25,9 @@ That way nobody else's code has to change.
 """
 
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Toggle this in your .env later (see config.py). For now, a simple flag.
 # If True, we use a real local HuggingFace model.
